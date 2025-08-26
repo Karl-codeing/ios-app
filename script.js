@@ -1,21 +1,32 @@
+const API_KEY = "9b953abebd684a00a461265ddb353241"; // Ersetze dies mit deinem echten API-Key
+
 async function sendMsg() {
-  let input = document.getElementById("msg");
-  let msg = input.value.trim();
+  const input = document.getElementById("msg");
+  const msg = input.value.trim();
   if (!msg) return;
   input.value = "";
 
-  let chat = document.getElementById("chat");
+  const chat = document.getElementById("chat");
   chat.innerHTML += `<div class="msg user"><b>Du:</b> ${msg}</div>`;
   chat.scrollTop = chat.scrollHeight;
 
   try {
-    let res = await fetch("http://192.168.2.127:5000/ask", {
+    const res = await fetch("https://api.aimlapi.com/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt: msg })
+      headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4o", // oder ein anderes Modell deiner Wahl
+        messages: [{ role: "user", content: msg }],
+        max_tokens: 512,
+      }),
     });
-    let data = await res.json();
-    chat.innerHTML += `<div class="msg bot"><b>KI:</b> ${data.response}</div>`;
+
+    const data = await res.json();
+    const reply = data.choices[0].message.content;
+    chat.innerHTML += `<div class="msg bot"><b>KI:</b> ${reply}</div>`;
     chat.scrollTop = chat.scrollHeight;
   } catch (err) {
     chat.innerHTML += `<div class="msg bot"><b>Fehler:</b> Keine Verbindung zum Server.</div>`;

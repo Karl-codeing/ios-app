@@ -1,5 +1,5 @@
 // IP deines PCs / Flask-Backend anpassen
-const SERVER_URL = "http://192.168.2.127:5000/ask";
+const SERVER_URL = "http://192.168.56.1:5000/ask";
 
 async function sendMsg() {
     const input = document.getElementById("msg");
